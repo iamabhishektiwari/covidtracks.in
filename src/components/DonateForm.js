@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,112 +11,165 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import { useForm } from "react-hook-form";
 
 function DonateForm({ open, handleClose }) {
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
+  const { register, handleSubmit } = useForm();
+
+  const [selectedDate, setSelectedDate] = useState(
+    new Date("2020-08-15T21:11:54")
   );
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState();
+  const [mob, setMob] = useState();
+  const [alt, setAlt] = useState();
+  const [pincode, setPincode] = useState();
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+  const handleEmailChange = (str) => {
+    setEmail(str);
+  };
+  const handleMobChange = (str) => {
+    setMob(str);
+  };
+  const handleAltChange = (str) => {
+    setAlt(str);
+  };
+  const handlePincodeChange = (str) => {
+    setPincode(str);
+  };
+
+  const handleNameChange = (str) => {
+    setName(str);
+  };
+  const onSubmit = (data) => {
+    console.log(data);
+    handleClose();
+  };
+
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogContent>
-        <DialogContentText color="secondary">
-          To donate your plasma, please enter your details here. We will contact
-          you based on requirement .
-        </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
-          fullWidth
-          color="secondary"
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="email"
-          label="Email Address"
-          type="email"
-          fullWidth
-          color="secondary"
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="mobile"
-          label="Mobile No."
-          type="number"
-          fullWidth
-          color="secondary"
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="alternateNo"
-          label="Alternate No."
-          type="number"
-          fullWidth
-          color="secondary"
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="pincode"
-          label="Pin Code"
-          type="number"
-          fullWidth
-          color="secondary"
-        />
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent>
+          <DialogContentText color="secondary">
+            To donate your plasma, please enter your details here. We will
+            contact you based on requirement .
+          </DialogContentText>
+          <TextField
+            inputRef={register}
+            name="name"
+            required
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Name"
+            type="text"
             fullWidth
-            disableToolbar
-            variant="inline"
-            format="MM/dd/yyyy"
-            margin="normal"
-            id="positiveDate"
-            label="Tested positive on (Approx)"
-            value={selectedDate}
-            onChange={handleDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change date",
-            }}
             color="secondary"
+            onChange={handleNameChange}
           />
-          <KeyboardDatePicker
+          <TextField
+            inputRef={register}
+            name="email"
+            required
+            margin="dense"
+            id="email"
+            label="Email Address"
+            type="email"
             fullWidth
-            disableToolbar
-            variant="inline"
-            format="MM/dd/yyyy"
-            margin="normal"
-            id="negativeDate"
-            label="Tested negative on (Approx)"
-            value={selectedDate}
-            onChange={handleDateChange}
-            KeyboardButtonProps={{
-              "aria-label": "change date",
-            }}
             color="secondary"
+            onChange={handleEmailChange}
           />
-        </MuiPickersUtilsProvider>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="secondary">
-          Cancel
-        </Button>
-        <Button onClick={handleClose} color="secondary" variant="contained">
-          Submit
-        </Button>
-      </DialogActions>
+          <TextField
+            inputRef={register}
+            name="mobile"
+            required
+            margin="dense"
+            id="mobile"
+            label="Mobile No."
+            type="number"
+            fullWidth
+            color="secondary"
+            onChange={handleMobChange}
+          />
+          <TextField
+            inputRef={register}
+            name="altMobile"
+            required
+            margin="dense"
+            id="alternateNo"
+            label="Alternate No."
+            type="number"
+            fullWidth
+            color="secondary"
+            onChange={handleAltChange}
+          />
+
+          <TextField
+            inputRef={register}
+            name="pincode"
+            required
+            margin="dense"
+            id="pincode"
+            label="Pin Code"
+            type="number"
+            fullWidth
+            color="secondary"
+            onChange={handlePincodeChange}
+          />
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              inputRef={register}
+              name="posDate"
+              fullWidth
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="positiveDate"
+              label="Tested positive on (Approx)"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
+              color="secondary"
+            />
+            <KeyboardDatePicker
+              inputRef={register}
+              name="negDate"
+              fullWidth
+              disableToolbar
+              variant="inline"
+              format="MM/dd/yyyy"
+              margin="normal"
+              id="negativeDate"
+              label="Tested negative on (Approx)"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
+              color="secondary"
+            />
+          </MuiPickersUtilsProvider>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Cancel
+          </Button>
+
+          <Button color="secondary" variant="contained" type="submit">
+            Submit
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }

@@ -28,8 +28,6 @@ const useStyles = makeStyles((theme) => ({
   titleText: {
     paddingTop: "7%",
     paddingBottom: "5%",
-    textDecorationLine: "underline",
-    textDecorationColor: theme.palette.primary.main,
   },
   sideText: { paddingTop: "10", marginTop: 20 },
   bts: {
@@ -61,7 +59,7 @@ export default function Counter() {
             alignItems="flex-end"
             alignContent="space-between"
           >
-            <Grid xs={12} sm={12} md={7} lg={7}>
+            <Grid item xs={12} sm={12} md={7} lg={7}>
               <Typography
                 component="h1"
                 variant="h4"
@@ -87,7 +85,7 @@ export default function Counter() {
                 </span>
               </Typography>
             </Grid>
-            <Grid xs={12} sm={12} md={5} lg={5}>
+            <Grid item xs={12} sm={12} md={5} lg={5}>
               <div className={classes.sideText}>
                 <Typography
                   variant="h6"
@@ -99,10 +97,10 @@ export default function Counter() {
                     You can Save lifes, donate today. <br></br>
                     <Button
                       variant="contained"
-                      color="secondary"
+                      color="primary"
                       onClick={handleClickOpen}
                     >
-                      <div className={classes.bts}>Register</div>
+                      Register
                     </Button>
                   </span>
                 </Typography>

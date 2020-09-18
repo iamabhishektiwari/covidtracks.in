@@ -37,7 +37,7 @@ function Top() {
   };
 
   return (
-    <main>
+    <main id="Top">
       <DonateForm open={open} handleClose={handleClose} />
       <AppBar
         position="static"
@@ -71,6 +71,7 @@ function Top() {
             About
           </Link> */}
             <Link
+              to="/"
               variant="button"
               color="primary"
               className={classes.link}

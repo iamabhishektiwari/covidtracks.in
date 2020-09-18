@@ -6,6 +6,9 @@ import { makeStyles, responsiveFontSizes } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import DonateForm from "./DonateForm";
 import RequestForm from "./RequestForm";
+import { Fab, Icon } from "@material-ui/core";
+import { Link, animateScroll as scroll } from "react-scroll";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
@@ -41,6 +44,13 @@ const useStyles = makeStyles((theme) => ({
   },
   titleText: {},
   sideText: { paddingTop: 20, marginTop: 20 },
+  fab: {
+    top: "auto",
+    right: 20,
+    bottom: 20,
+    left: "auto",
+    position: "fixed",
+  },
 }));
 
 export default function Counter() {
@@ -66,6 +76,21 @@ export default function Counter() {
     <main className={classes.mainGrid}>
       {/* Hero unit */}
       <div className={classes.heroContent}>
+        <Link
+          to="Stats"
+          spy={true}
+          smooth={true}
+          offset={-70}
+          duration={700}
+          className={classes.fab}
+        >
+          <Fab color="primary" variant="extended" size="large">
+            <Icon color="secondary">
+              <KeyboardArrowDownIcon />
+            </Icon>
+          </Fab>
+        </Link>
+
         <DonateForm open={open} handleClose={handleClose} />
         <RequestForm open={reqOpen} handleClose={handleCloseReq} />
         <Container maxWidth="lg">
@@ -75,7 +100,7 @@ export default function Counter() {
             alignItems="center"
             alignContent="space-between"
           >
-            <Grid xs={12} sm={12} md={7} lg={7}>
+            <Grid item xs={12} sm={12} md={7} lg={7}>
               <Typography variant="h5" color="textSecondary">
                 DONATE or REQUEST PLASMA
               </Typography>
@@ -96,7 +121,7 @@ export default function Counter() {
                 </div>
               </Typography>
             </Grid>
-            <Grid xs={12} sm={12} md={5} lg={5}>
+            <Grid item xs={12} sm={12} md={5} lg={5}>
               <div className={classes.sideText}>
                 <Typography
                   variant="h5"
@@ -110,7 +135,7 @@ export default function Counter() {
                   </span>
                 </Typography>
                 <div className={classes.heroButtons}>
-                  <Grid container spacing={2} justify="left">
+                  <Grid container spacing={2}>
                     <Grid item>
                       <Button
                         variant="contained"

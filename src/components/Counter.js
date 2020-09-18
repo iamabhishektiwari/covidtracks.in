@@ -1,38 +1,103 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import { Typography, Link, Card } from "@material-ui/core";
+import { Typography, Link, Card, Box } from "@material-ui/core";
 import { makeStyles, responsiveFontSizes } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Footer from "./Footer";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Chart from "./Chart";
 const tiers = [
   {
-    title: "Total",
-    price: "4200000",
-
-    buttonText: "Graph",
-    buttonVariant: "outlined",
+    id: 0,
+    title: "Covid-19",
+    options: {
+      exportEnabled: true,
+      animationEnabled: true,
+      title: {
+        text: "Covid-19 INDIA",
+      },
+      data: [
+        {
+          type: "pie",
+          startAngle: 75,
+          toolTipContent: "<b>{label}</b>: {y}%",
+          showInLegend: "true",
+          legendText: "{label}",
+          indexLabelFontSize: 16,
+          indexLabel: "{label} - {y}%",
+          dataPoints: [
+            { y: 18, label: "Direct" },
+            { y: 49, label: "Organic Search" },
+            { y: 9, label: "Paid Search" },
+          ],
+        },
+      ],
+    },
   },
   {
-    title: "Active",
-    price: "127839",
-
-    buttonText: "Graph",
-    buttonVariant: "outlined",
+    id: 1,
+    title: "Confirmed",
+    options: {
+      title: {
+        text: "Daily Confirmed",
+      },
+      data: [
+        {
+          type: "column",
+          dataPoints: [
+            { label: "Apple", y: 10 },
+            { label: "Orange", y: 15 },
+            { label: "Banana", y: 25 },
+            { label: "Mango", y: 30 },
+            { label: "Grape", y: 28 },
+          ],
+        },
+      ],
+    },
   },
   {
+    id: 2,
     title: "Recovered",
-    price: "0",
-
-    buttonText: "Graph",
-    buttonVariant: "outlined",
+    options: {
+      title: {
+        text: "Daily Recovered",
+      },
+      data: [
+        {
+          type: "column",
+          dataPoints: [
+            { label: "Apple", y: 10 },
+            { label: "Orange", y: 15 },
+            { label: "Banana", y: 25 },
+            { label: "Mango", y: 30 },
+            { label: "Grape", y: 28 },
+          ],
+        },
+      ],
+    },
   },
   {
+    id: 3,
     title: "Deaths",
-    price: "0",
-
-    buttonText: "Graph",
-    buttonVariant: "outlined",
+    options: {
+      title: {
+        text: "Daily Deaths",
+      },
+      data: [
+        {
+          type: "column",
+          dataPoints: [
+            { label: "Apple", y: 10 },
+            { label: "Orange", y: 15 },
+            { label: "Banana", y: 25 },
+            { label: "Mango", y: 30 },
+            { label: "Grape", y: 28 },
+          ],
+        },
+      ],
+    },
   },
 ];
 const useStyles = makeStyles((theme) => ({
@@ -57,8 +122,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   titleText: {
-    textDecorationLine: "underline",
-    textDecorationColor: theme.palette.primary.main,
     paddingTop: 30,
     paddingBottom: "3%",
   },
@@ -71,11 +134,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Counter() {
-  const classes = useStyles();
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
   return (
-    <main className={classes.mainGrid}>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography component="span">{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index) {
+  return {
+    id: `scrollable-auto-tab-${index}`,
+    "aria-controls": `scrollable-auto-tabpanel-${index}`,
+  };
+}
+
+export default function Counter() {
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  return (
+    <main className={classes.mainGrid} id="Stats">
       {/* Hero unit */}
       <div className={classes.heroContent}>
         <Container maxWidth="lg">
@@ -85,7 +180,7 @@ export default function Counter() {
             alignItems="flex-end"
             alignContent="space-between"
           >
-            <Grid xs={12} sm={12} md={12} lg={12}>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
               <Typography
                 component="h1"
                 variant="h4"
@@ -100,37 +195,29 @@ export default function Counter() {
                 </div>
               </Typography>
             </Grid>
-            <Grid
-              container
-              spacing={5}
-              alignItems="flex-end"
-              alignContent="space-between"
-              xs={12}
-              sm={12}
-              md={12}
-              lg={12}
-            >
+            <Grid item xs={12}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                indicatorColor="secondary"
+                textColor="secondary"
+                variant="fullWidth"
+                centered
+              >
+                {tiers.map((tier) => (
+                  <Tab
+                    key={tier.id}
+                    label={tier.title}
+                    {...a11yProps(tier.title)}
+                  />
+                ))}
+              </Tabs>
               {tiers.map((tier) => (
-                <Grid xs={6} sm={4} md={3} lg={3}>
-                  <Card className={classes.card} elevation={0}>
-                    <Typography
-                      variant="h7"
-                      align="left"
-                      color="textSecondary"
-                      paragraph
-                    >
-                      <span>{tier.title}</span>
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      align="left"
-                      color="secondary"
-                      paragraph
-                    >
-                      <span>{tier.price}</span>
-                    </Typography>
+                <TabPanel value={value} index={tier.id} key={tier.id}>
+                  <Card elevation={0}>
+                    <Chart options={tier.options} />
                   </Card>
-                </Grid>
+                </TabPanel>
               ))}
             </Grid>
           </Grid>

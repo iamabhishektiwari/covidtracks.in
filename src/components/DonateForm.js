@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+import {
+  TextField,
+  Select,
+  MenuItem,
+  Container,
+  Grid,
+} from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -12,40 +18,43 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { useForm } from "react-hook-form";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import { makeStyles, responsiveFontSizes } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  radioLabel: {
+    paddingTop: 15,
+  },
+}));
 
 function DonateForm({ open, handleClose }) {
+  const classes = useStyles();
   const { register, handleSubmit } = useForm();
 
-  const [selectedDate, setSelectedDate] = useState(
+  const [selectedDatePos, setSelectedDatePos] = useState(
     new Date("2020-08-15T21:11:54")
   );
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState();
-  const [mob, setMob] = useState();
-  const [alt, setAlt] = useState();
-  const [pincode, setPincode] = useState();
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
-  const handleEmailChange = (str) => {
-    setEmail(str);
-  };
-  const handleMobChange = (str) => {
-    setMob(str);
-  };
-  const handleAltChange = (str) => {
-    setAlt(str);
-  };
-  const handlePincodeChange = (str) => {
-    setPincode(str);
+  const [selectedDateNeg, setSelectedDateNeg] = useState(
+    new Date("2020-08-15T21:11:54")
+  );
+
+  const handleDatePosChange = (date) => {
+    setSelectedDatePos(date);
   };
 
-  const handleNameChange = (str) => {
-    setName(str);
+  const handleDateNegChange = (date) => {
+    setSelectedDateNeg(date);
   };
+
   const onSubmit = (data) => {
     console.log(data);
+    console.log(selectedDateNeg);
+    console.log(selectedDatePos);
     handleClose();
   };
 
@@ -72,8 +81,45 @@ function DonateForm({ open, handleClose }) {
             type="text"
             fullWidth
             color="secondary"
-            onChange={handleNameChange}
           />
+          <TextField
+            inputRef={register}
+            name="age"
+            required
+            margin="dense"
+            id="age"
+            label="Age"
+            type="number"
+            fullWidth
+            color="secondary"
+          />
+
+          <FormControl component="fieldset" color="secondary">
+            <FormLabel className={classes.radioLabel} component="div">
+              Gender
+            </FormLabel>
+            <RadioGroup aria-label="gender" name="gender1">
+              <FormControlLabel
+                value="female"
+                control={
+                  <Radio name="female" inputRef={register} size="small" />
+                }
+                label="Female"
+              />
+              <FormControlLabel
+                value="male"
+                control={<Radio name="male" inputRef={register} size="small" />}
+                label="Male"
+              />
+              <FormControlLabel
+                value="other"
+                control={
+                  <Radio name="others" inputRef={register} size="small" />
+                }
+                label="Other"
+              />
+            </RadioGroup>
+          </FormControl>
           <TextField
             inputRef={register}
             name="email"
@@ -84,7 +130,6 @@ function DonateForm({ open, handleClose }) {
             type="email"
             fullWidth
             color="secondary"
-            onChange={handleEmailChange}
           />
           <TextField
             inputRef={register}
@@ -96,19 +141,16 @@ function DonateForm({ open, handleClose }) {
             type="number"
             fullWidth
             color="secondary"
-            onChange={handleMobChange}
           />
           <TextField
             inputRef={register}
             name="altMobile"
-            required
             margin="dense"
             id="alternateNo"
             label="Alternate No."
             type="number"
             fullWidth
             color="secondary"
-            onChange={handleAltChange}
           />
 
           <TextField
@@ -121,7 +163,6 @@ function DonateForm({ open, handleClose }) {
             type="number"
             fullWidth
             color="secondary"
-            onChange={handlePincodeChange}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
@@ -134,8 +175,8 @@ function DonateForm({ open, handleClose }) {
               margin="normal"
               id="positiveDate"
               label="Tested positive on (Approx)"
-              value={selectedDate}
-              onChange={handleDateChange}
+              value={selectedDatePos}
+              onChange={handleDatePosChange}
               KeyboardButtonProps={{
                 "aria-label": "change date",
               }}
@@ -151,8 +192,8 @@ function DonateForm({ open, handleClose }) {
               margin="normal"
               id="negativeDate"
               label="Tested negative on (Approx)"
-              value={selectedDate}
-              onChange={handleDateChange}
+              value={selectedDateNeg}
+              onChange={handleDateNegChange}
               KeyboardButtonProps={{
                 "aria-label": "change date",
               }}

@@ -7,11 +7,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Top from "./Top";
 
-import Footer from "./Footer";
-
 import Home from "./Home";
 import HowItWorks from "./HowItWorks";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {

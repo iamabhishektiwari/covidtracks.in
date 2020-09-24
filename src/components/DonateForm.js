@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
-import {
-  TextField,
-  Select,
-  MenuItem,
-  Container,
-  Grid,
-} from "@material-ui/core";
+import { TextField, CircularProgress, Select } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -23,15 +16,23 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import { makeStyles, responsiveFontSizes } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import firebase from "./../firebase";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles((theme) => ({
   radioLabel: {
     paddingTop: 15,
   },
+  selectLabel: {
+    paddingTop: 0,
+  },
 }));
 
 function DonateForm({ open, handleClose }) {
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [blood, setBlood] = useState("-");
   const classes = useStyles();
   const { register, handleSubmit } = useForm();
 
@@ -50,12 +51,44 @@ function DonateForm({ open, handleClose }) {
   const handleDateNegChange = (date) => {
     setSelectedDateNeg(date);
   };
+  const handleBloodChange = (bl) => {
+    setBlood(bl.target.value);
+  };
 
   const onSubmit = (data) => {
-    console.log(data);
-    console.log(selectedDateNeg);
-    console.log(selectedDatePos);
-    handleClose();
+    setLoading(true);
+
+    let gender = "";
+    if (data.male === "male") {
+      gender = "male";
+    } else {
+      gender = data.female === "female" ? "female" : "others";
+    }
+
+    const donor = {
+      name: data.name,
+      age: data.age,
+      bloodGroup: data.bloodSelect,
+      mobile: data.mobile,
+      email: data.email,
+      gender: gender,
+      pincode: data.pincode,
+      negdate: selectedDateNeg,
+      posdate: selectedDatePos,
+    };
+    const db = firebase.firestore();
+    db.collection("donors").add(donor);
+    setTimeout(() => {
+      setLoading(false);
+      setSuccess(true);
+    }, 1400);
+    setTimeout(() => {
+      handleClose();
+    }, 3000);
+
+    setTimeout(() => {
+      setSuccess(false);
+    }, 10000);
   };
 
   return (
@@ -65,151 +98,183 @@ function DonateForm({ open, handleClose }) {
       aria-labelledby="form-dialog-title"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogContent>
-          <DialogContentText color="secondary">
-            To donate your plasma, please enter your details here. We will
-            contact you based on requirement .
-          </DialogContentText>
-          <TextField
-            inputRef={register}
-            name="name"
-            required
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Name"
-            type="text"
-            fullWidth
-            color="secondary"
-          />
-          <TextField
-            inputRef={register}
-            name="age"
-            required
-            margin="dense"
-            id="age"
-            label="Age"
-            type="number"
-            fullWidth
-            color="secondary"
-          />
-
-          <FormControl component="fieldset" color="secondary">
-            <FormLabel className={classes.radioLabel} component="div">
-              Gender
-            </FormLabel>
-            <RadioGroup aria-label="gender" name="gender1">
-              <FormControlLabel
-                value="female"
-                control={
-                  <Radio name="female" inputRef={register} size="small" />
-                }
-                label="Female"
-              />
-              <FormControlLabel
-                value="male"
-                control={<Radio name="male" inputRef={register} size="small" />}
-                label="Male"
-              />
-              <FormControlLabel
-                value="other"
-                control={
-                  <Radio name="others" inputRef={register} size="small" />
-                }
-                label="Other"
-              />
-            </RadioGroup>
-          </FormControl>
-          <TextField
-            inputRef={register}
-            name="email"
-            required
-            margin="dense"
-            id="email"
-            label="Email Address"
-            type="email"
-            fullWidth
-            color="secondary"
-          />
-          <TextField
-            inputRef={register}
-            name="mobile"
-            required
-            margin="dense"
-            id="mobile"
-            label="Mobile No."
-            type="number"
-            fullWidth
-            color="secondary"
-          />
-          <TextField
-            inputRef={register}
-            name="altMobile"
-            margin="dense"
-            id="alternateNo"
-            label="Alternate No."
-            type="number"
-            fullWidth
-            color="secondary"
-          />
-
-          <TextField
-            inputRef={register}
-            name="pincode"
-            required
-            margin="dense"
-            id="pincode"
-            label="Pin Code"
-            type="number"
-            fullWidth
-            color="secondary"
-          />
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
+        {!loading && !success && (
+          <DialogContent>
+            <DialogContentText color="secondary">
+              To donate your plasma, please enter your details here. We will
+              contact you based on requirement .
+            </DialogContentText>
+            <TextField
               inputRef={register}
-              name="posDate"
+              name="name"
+              required
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Name"
+              type="text"
               fullWidth
-              disableToolbar
-              variant="inline"
-              format="MM/dd/yyyy"
-              margin="normal"
-              id="positiveDate"
-              label="Tested positive on (Approx)"
-              value={selectedDatePos}
-              onChange={handleDatePosChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
               color="secondary"
             />
-            <KeyboardDatePicker
-              inputRef={register}
-              name="negDate"
+            <TextField
               fullWidth
-              disableToolbar
-              variant="inline"
-              format="MM/dd/yyyy"
-              margin="normal"
-              id="negativeDate"
-              label="Tested negative on (Approx)"
-              value={selectedDateNeg}
-              onChange={handleDateNegChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
+              inputRef={register}
+              name="age"
+              required
+              margin="dense"
+              id="age"
+              label="Age"
+              type="number"
               color="secondary"
             />
-          </MuiPickersUtilsProvider>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Cancel
-          </Button>
+            <FormControl
+              className={classes.formControl}
+              fullWidth
+              color="secondary"
+            >
+              <InputLabel
+                className={classes.selectLabel}
+                htmlFor="age-native-simple"
+              >
+                Select Blood Group
+              </InputLabel>
+              <Select
+                name="bloodSelect"
+                native
+                value={blood}
+                fullWidth
+                inputRef={register}
+                onChange={handleBloodChange}
+              >
+                <option aria-label="None" value="" />
+                <option value={"A"}>A</option>
+                <option value={"B"}>B</option>
+                <option value={"O"}>O</option>
+                <option value={"AB"}>AB</option>
+              </Select>
+            </FormControl>
 
-          <Button color="secondary" variant="contained" type="submit">
-            Submit
-          </Button>
-        </DialogActions>
+            <FormControl component="fieldset" color="secondary">
+              <FormLabel className={classes.radioLabel} component="div">
+                Gender
+              </FormLabel>
+              <RadioGroup aria-label="gender" name="gender1">
+                <FormControlLabel
+                  value="female"
+                  control={
+                    <Radio name="female" inputRef={register} size="small" />
+                  }
+                  label="Female"
+                />
+                <FormControlLabel
+                  value="male"
+                  control={
+                    <Radio name="male" inputRef={register} size="small" />
+                  }
+                  label="Male"
+                />
+                <FormControlLabel
+                  value="other"
+                  control={
+                    <Radio name="others" inputRef={register} size="small" />
+                  }
+                  label="Other"
+                />
+              </RadioGroup>
+            </FormControl>
+            <TextField
+              inputRef={register}
+              name="email"
+              required
+              margin="dense"
+              id="email"
+              label="Email Address"
+              type="email"
+              fullWidth
+              color="secondary"
+            />
+            <TextField
+              inputRef={register}
+              name="mobile"
+              required
+              margin="dense"
+              id="mobile"
+              label="Mobile No."
+              type="number"
+              fullWidth
+              color="secondary"
+            />
+
+            <TextField
+              inputRef={register}
+              name="pincode"
+              required
+              margin="dense"
+              id="pincode"
+              label="Pin Code"
+              type="number"
+              fullWidth
+              color="secondary"
+            />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                inputRef={register}
+                name="posDate"
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="positiveDate"
+                label="Tested positive on (Approx)"
+                value={selectedDatePos}
+                onChange={handleDatePosChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                color="secondary"
+              />
+              <KeyboardDatePicker
+                inputRef={register}
+                name="negDate"
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="negativeDate"
+                label="Tested negative on (Approx)"
+                value={selectedDateNeg}
+                onChange={handleDateNegChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                color="secondary"
+              />
+            </MuiPickersUtilsProvider>
+          </DialogContent>
+        )}
+        {!loading && !success && (
+          <DialogActions>
+            <Button onClick={handleClose} color="secondary">
+              Cancel
+            </Button>
+
+            <Button color="secondary" variant="contained" type="submit">
+              Submit
+            </Button>
+          </DialogActions>
+        )}
+        {!loading && success && (
+          <DialogContent>
+            <DialogContentText color="secondary">
+              Thanks for opting to donate, Stay Safe.
+            </DialogContentText>
+          </DialogContent>
+        )}
+        {loading && (
+          <DialogContent>
+            <CircularProgress color="secondary" />
+          </DialogContent>
+        )}
       </form>
     </Dialog>
   );

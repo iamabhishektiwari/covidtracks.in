@@ -2,12 +2,12 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles, responsiveFontSizes } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import DonateForm from "./DonateForm";
 import RequestForm from "./RequestForm";
 import { Fab, Icon } from "@material-ui/core";
-import { Link, animateScroll as scroll } from "react-scroll";
+import { Link } from "react-scroll";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 const useStyles = makeStyles((theme) => ({
   icon: {

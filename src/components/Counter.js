@@ -1,8 +1,7 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import { Typography, Link, Card, Box } from "@material-ui/core";
-import { makeStyles, responsiveFontSizes } from "@material-ui/core/styles";
+import { Typography, Card, Box } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Footer from "./Footer";
 import Tabs from "@material-ui/core/Tabs";

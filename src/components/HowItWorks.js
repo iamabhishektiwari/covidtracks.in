@@ -1,24 +1,21 @@
 import React from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
+
 import Grid from "@material-ui/core/Grid";
 
-import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CardMedia from "@material-ui/core/CardMedia";
-import Box from "@material-ui/core/Box";
-import Top from "./Top";
-import Counter from "./Counter";
-import Form from "./Form";
+
 import Footer from "./Footer";
-import FightBack from "./FightBack";
+
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
-import AddToQueueIcon from "@material-ui/icons/AddToQueue";
-import LibraryAddIcon from "@material-ui/icons/LibraryAdd";
+
 import { Icon, Card } from "@material-ui/core";
+import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -61,13 +58,19 @@ const steps = [
     id: "2",
     title: "REGISTRATION",
     description:
-      "You will be asked to show proof of identification and share your contact information when you arrive at the donor center. All information will be kept strictly confidential.",
+      "You are required to fill out the register form, if we get plasma request near you we will get in touch and help in smooth and safe donation. All information will be kept strictly confidential.",
   },
   {
     id: "3",
     title: "Matching",
     description:
       "Our algorithm will find a requirement nearest to you, and will contact you.",
+  },
+  {
+    id: "4",
+    title: "Donation",
+    description:
+      "You will be asked to show proof of identification and share your contact information when you arrive at the donor center. All information will be kept strictly confidential.",
   },
 ];
 
@@ -122,7 +125,10 @@ export default function HowItWorks() {
                         <VerifiedUserIcon style={{ fontSize: 80 }} />
                       )}
                       {step.id === "3" && (
-                        <LibraryAddIcon style={{ fontSize: 80 }} />
+                        <ThumbUpIcon style={{ fontSize: 80 }} />
+                      )}
+                      {step.id === "4" && (
+                        <LocalHospitalIcon style={{ fontSize: 80 }} />
                       )}
                     </Icon>
                   </Grid>
